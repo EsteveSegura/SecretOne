@@ -4,24 +4,14 @@ class DeleteSecret {
     }
 
     async delete({ id, token }) {
-        const getSecret = await this.secretRepository.findById(id);
-        this._ensureSecretExists(getSecret);
-        
-        const bearerToken = this._splitAndCheckToken(token);
-        this._ensureTokenIsValid(getSecret, id, bearerToken)
+        const findSecret = await this.secretRepository.findById(id);
+
+        this._ensureSecretExists(findSecret);
+        this._ensureTokenIsValid(findSecret, id, token);
         
         await this.secretRepository.delete(id);
     }
 
-    _splitAndCheckToken(token){
-        const splitedToken = token.split(" ")
-        
-        if(splitedToken[0] == "Bearer"){
-            return splitedToken[1]
-        }
-        
-        throw new Error('Bearer not valid');
-    }
 
     _ensureTokenIsValid(secret, id, token) {
         if (secret._id != id || secret._token != token) {

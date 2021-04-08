@@ -1,7 +1,6 @@
 const Secret = require('../../domain/secret/secret');
 const SaveSecretResponse = require('./save-secret-response');
 
-
 class SaveSecret {
     constructor({ secretRepository, idGenerator, tokenGenerator, cipher }) {
         this.secretRepository = secretRepository;
@@ -11,21 +10,40 @@ class SaveSecret {
     }
 
     async save({ text }) {
+        const { id, token } = this._generateIdAndToken()
+        
+        const findSecret = await this.secretRepository.findById(id);
+        this._ensureSecretExists(findSecret);
+
+        const { iv, secretKey, secret } = this._encryptText(text)
+        const currentDate = new Date();
+
+        const secretDomain = new Secret({
+            id,
+            secret,
+            token,
+            secretKey,
+            iv,
+            createdAt: currentDate,
+            updatedAt: currentDate
+        });
+
+        await this.secretRepository.save(secretDomain);
+        return new SaveSecretResponse({ token, id })
+    }
+
+    _encryptText(text) {
         const secretEncrypted = this.cipher.encrypt(text)
         const { iv, secretKey, content: secret } = secretEncrypted;
 
+        return { iv, secretKey, secret }
+    }
+
+    _generateIdAndToken() {
         const id = this.idGenerator.generate()
         const token = this.tokenGenerator.generate()
-        const createdAt = new Date
-        const updatedAt = new Date
-        const secretDomain = new Secret({ id, secret, token, secretKey, iv, createdAt, updatedAt })
 
-        const getSecret = await this.secretRepository.findById(id);
-        this._ensureSecretExists(getSecret);
-
-        await this.secretRepository.save(secretDomain);
-
-        return new SaveSecretResponse({ token, id })
+        return { id, token }
     }
 
     _ensureSecretExists(secret) {

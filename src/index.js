@@ -7,7 +7,6 @@ const app = express();
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-// const container = require('./container');
 
 const secretRoutes = require('./infrastructure/rest/secret-controller');
 

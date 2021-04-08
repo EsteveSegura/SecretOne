@@ -38,7 +38,8 @@ const mongoSecretParser = ({ muuid }) => {
                 secretKey,
                 iv,
                 createdAt,
-                updatedAt};
+                updatedAt
+            };
         },
     };
 };

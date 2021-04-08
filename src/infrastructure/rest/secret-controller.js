@@ -4,11 +4,13 @@ const FindSecretCommand = require('../../application/find_secret/find-secret-com
 const DeleteSecretCommand = require('../../application/delete_secret/delete-secret-command');
 const container = require('../../container');
 
+const isTokenPresent = require('./middleware/token-is-present');
+
 const router = express.Router();
 
 router.post('/', async (req, res) => {
     const { secret: text } = req.body;
-    
+
     try {
         const command = new SaveSecretCommand({ text });
         const saveSecret = container.resolve('saveSecret');
@@ -19,12 +21,11 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', isTokenPresent, async (req, res) => {
     const { id } = req.params;
-    const { authorization: token } = req.headers;
+    const { token } = req;
 
     try {
-
         const command = new FindSecretCommand({ id, token });
         const findSecret = container.resolve('findSecret');
         const response = await findSecret.find(command);
@@ -34,14 +35,13 @@ router.get('/:id', async (req, res) => {
 
         res.status(200).json({ ...response });
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: err.toString() });
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', isTokenPresent, async (req, res) => {
     const { id } = req.params;
-    const { authorization: token } = req.headers;
+    const { token } = req;
 
     try {
         const command = new DeleteSecretCommand({ id, token });
@@ -50,7 +50,6 @@ router.delete('/:id', async (req, res) => {
 
         res.status(204).json();
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: err.toString() });
     }
 });

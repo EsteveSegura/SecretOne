@@ -12,7 +12,7 @@ class MongoSecretRepository extends SecretRepository {
     async findById(id) {
         const db = await this.mongoDbHandler.getInstance();
         try {
-            const secretDocument = await db.collection('secrets').findOne({_id: MUUID.from(id)});
+            const secretDocument = await db.collection('secrets').findOne({ _id: MUUID.from(id) });
             return secretDocument ? this.secretDocumentParser.toDomain(secretDocument) : null;
         } catch (error) {
             throw new Error(error);
@@ -30,7 +30,6 @@ class MongoSecretRepository extends SecretRepository {
 
     async save(secret) {
         const db = await this.mongoDbHandler.getInstance();
-        console.log(secret);
         try {
             const secretDocument = this.secretDocumentParser.toDocument(secret);
             await db.collection('secrets').insertOne(secretDocument);
@@ -45,7 +44,7 @@ class MongoSecretRepository extends SecretRepository {
     async delete(id) {
         const db = await this.mongoDbHandler.getInstance();
         try {
-            await db.collection('secrets').deleteOne({_id: MUUID.from(id)});
+            await db.collection('secrets').deleteOne({ _id: MUUID.from(id) });
         } catch (error) {
             throw new Error(error);
         }
