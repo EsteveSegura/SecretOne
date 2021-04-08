@@ -16,6 +16,7 @@ class SaveSecret {
         this._ensureSecretExists(findSecret);
 
         const { iv, secretKey, secret } = this._encryptText(text)
+        console.log(secret)
         const currentDate = new Date();
 
         const secretDomain = new Secret({
@@ -35,7 +36,6 @@ class SaveSecret {
     _encryptText(text) {
         const secretEncrypted = this.cipher.encrypt(text)
         const { iv, secretKey, content: secret } = secretEncrypted;
-
         return { iv, secretKey, secret }
     }
 
