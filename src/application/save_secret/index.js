@@ -2,11 +2,12 @@ const Secret = require('../../domain/secret/secret');
 const SaveSecretResponse = require('./save-secret-response');
 
 class SaveSecret {
-    constructor({ secretRepository, idGenerator, tokenGenerator, cipher }) {
+    constructor({ secretRepository, idGenerator, tokenGenerator, cipher, RedisSecretCache }) {
         this.secretRepository = secretRepository;
         this.idGenerator = idGenerator;
         this.tokenGenerator = tokenGenerator;
         this.cipher = cipher;
+        this.RedisSecretCache = RedisSecretCache;
     }
 
     async save({ text }) {
@@ -30,6 +31,7 @@ class SaveSecret {
         });
 
         await this.secretRepository.save(secretDomain);
+        await this.RedisSecretCache.save(secretDomain)
         return new SaveSecretResponse({ token, id })
     }
 

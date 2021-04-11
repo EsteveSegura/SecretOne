@@ -1,0 +1,49 @@
+version: "3.7"
+
+services:
+    api:
+        build: .
+        depends_on:
+            - mongo-express
+            - redis
+        ports:
+            - 3001:3000
+            - 9229:9229
+        volumes: 
+            - ./src:/usr/src/app
+        command: npm run dev
+    mongo:
+        image: mongo
+        volumes:
+            - ./data:/data/db
+        ports:
+            - "27018:27017"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
+    redis:
+        image: redis
+        ports:
+            - 6380:6379
+        environment:
+            - REDIS_PASSWORD=admin
+            - ALLOW_EMPTY_PASSWORD=no
+        volumes:
+            - .data-redis:/data
+    mongo-express:
+        image: mongo-express
+        depends_on:
+            - mongo
+        ports:
+            - "8082:8081"
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+            ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+            ME_CONFIG_MONGODB_SERVER: mongo
+        command: bash -c "sleep 50 && node app"
+    redis-commander:
+        image: rediscommander/redis-commander
+        environment:
+            REDIS_HOSTS: redis
+        ports:
+            - "8083:8081"

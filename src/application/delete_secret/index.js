@@ -1,6 +1,7 @@
 class DeleteSecret {
-    constructor({ secretRepository }) {
+    constructor({ secretRepository, RedisSecretCache }) {
         this.secretRepository = secretRepository;
+        this.RedisSecretCache = RedisSecretCache;
     }
 
     async delete({ id, token }) {
@@ -9,6 +10,7 @@ class DeleteSecret {
         this._ensureSecretExists(findSecret);
         this._ensureTokenIsValid(findSecret, id, token);
         
+        await this.RedisSecretCache.delete(id);
         await this.secretRepository.delete(id);
     }
 

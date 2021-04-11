@@ -1,14 +1,17 @@
 const FindSecretResponse = require('./find-secret-response');
 
 class SaveSecret {
-    constructor({ secretRepository, cipher }) {
+    constructor({ secretRepository, cipher, RedisSecretCache }) {
         this.secretRepository = secretRepository;
         this.cipher = cipher;
+        this.RedisSecretCache = RedisSecretCache;
     }
 
     async find({ id, token }) {
         const findSecret = await this.secretRepository.findById(id);
-
+        const findSecretCache = await this.RedisSecretCache.findById(id);
+        console.log(findSecretCache)
+        
         this._ensureSecretExists(findSecret);
         this._ensureTokenAndIdAreValid(findSecret, id, token);
         const secret = this._decrypt(findSecret);

@@ -1,6 +1,6 @@
 require('dotenv').config();
-const { server: { port } } = require('./infrastructure/config');
 
+const { server: { port } } = require('./infrastructure/config');
 
 const express = require('express');
 const app = express();
