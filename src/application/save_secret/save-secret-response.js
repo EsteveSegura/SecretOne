@@ -1,16 +1,21 @@
-class SaveSecretResponse{
-    constructor({token,id}){
-        this._token = token;
+class SaveSecretResponse {
+    constructor({ secretKey, id, token }) {
         this._id = id;
+        this._secretKey = secretKey;
+        this._token = token
     }
 
     get token(){
         return this._token;
+        
     }
 
-    get id(){
+    get secretKey() {
+        return this._secretKey;
+    }
+
+    get id() {
         return this._id;
     }
 }
-
-module.exports = SaveSecretResponse;
+module.exports = SaveSecretResponse

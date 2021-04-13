@@ -1,12 +1,25 @@
+const { RichPresenceAssets } = require("discord.js");
+
 class Secret {
-    constructor({ id, secret, token, secretKey, iv, createdAt, updatedAt }) {
+    constructor({ id, secret, token,  iv, createdAt, updatedAt }) {
         this.id = id;
         this.secret = secret;
         this.token = token;
-        this.secretKey = secretKey;
         this.iv = iv;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    ensureIdIsValid(id){
+        if(this.id != id){
+            throw new Error('Grant not valid');
+        }
+    }
+
+    ensureTokenIsValid(token){
+        if(this.token != token){
+            throw new Error('Grant not valid');
+        }
     }
 
     get id() {
@@ -43,18 +56,6 @@ class Secret {
         }
 
         this._token = token;
-    }
-
-    get secretKey() {
-        return this._secretKey;
-    }
-
-    set secretKey(secretKey) {
-        if (!secretKey) {
-            throw new Error('Field secretKey in Secret cannot be empty')
-        }
-
-        this._secretKey = secretKey;
     }
 
     get iv() {

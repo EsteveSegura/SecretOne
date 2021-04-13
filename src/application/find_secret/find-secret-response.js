@@ -4,7 +4,7 @@ class FindSecretResponse{
     }
 
     get secret(){
-        return this._secret;
+        return this._secret
     }
 }
 
