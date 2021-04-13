@@ -25,7 +25,6 @@ class MongoSecretRepository extends SecretRepository {
 
     async update(secret) {
         throw new Error('Method not implemented yet');
-
     }
 
     async save(secret) {

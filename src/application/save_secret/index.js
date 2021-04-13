@@ -2,41 +2,41 @@ const Secret = require('../../domain/secret/secret');
 const SaveSecretResponse = require('./save-secret-response');
 
 class SaveSecret {
-    constructor({ secretRepository, idGenerator, tokenGenerator, cipher }) {
+    constructor({ secretRepository, idGenerator, tokenGenerator, cipher, RedisSecretCache }) {
         this.secretRepository = secretRepository;
         this.idGenerator = idGenerator;
         this.tokenGenerator = tokenGenerator;
         this.cipher = cipher;
+        this.RedisSecretCache = RedisSecretCache;
     }
 
     async save({ text }) {
         const { id, token } = this._generateIdAndToken()
-        
-        const findSecret = await this.secretRepository.findById(id);
-        this._ensureSecretExists(findSecret);
+        const currentDate = new Date()
+
+        const getSecret = await this.secretRepository.findById(id);
+        this._secretExists(getSecret);
 
         const { iv, secretKey, secret } = this._encryptText(text)
-        const currentDate = new Date();
-
         const secretDomain = new Secret({
             id,
             secret,
             token,
-            secretKey,
             iv,
             createdAt: currentDate,
             updatedAt: currentDate
         });
 
+<<<<<<< HEAD
+        await this.secretRepository.save(secretDomain)
+=======
         await this.secretRepository.save(secretDomain);
+        await this.RedisSecretCache.save(secretDomain)
         return new SaveSecretResponse({ token, id })
     }
+>>>>>>> fd546c84f0b1be87039691d6f37d0be2177a897b
 
-    _encryptText(text) {
-        const secretEncrypted = this.cipher.encrypt(text)
-        const { iv, secretKey, content: secret } = secretEncrypted;
-
-        return { iv, secretKey, secret }
+        return new SaveSecretResponse({ id, secretKey, token })
     }
 
     _generateIdAndToken() {
@@ -46,12 +46,20 @@ class SaveSecret {
         return { id, token }
     }
 
-    _ensureSecretExists(secret) {
+    _encryptText(text) {
+        const secretEncrypted = this.cipher.encrypt(text);
+        console.log(secretEncrypted)
+        const { iv, secretKey, content: secret } = secretEncrypted;
+        
+
+        return { iv, secretKey, secret }
+    }
+
+    _secretExists(secret) {
         if (secret) {
-            throw new Error('Secret already exist');
+            throw new Error('Secret already exists');
         }
     }
 }
 
-
-module.exports = SaveSecret;
+module.exports = SaveSecret

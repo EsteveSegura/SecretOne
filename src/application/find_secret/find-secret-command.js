@@ -1,16 +1,16 @@
 class FindSecretCommand{
-    constructor({id,token}){
+    constructor({id,secretKey}){
         this._id = id;
-        this._token = token;
+        this._secretKey = secretKey;
     }
 
     get id(){
-        return this._id;
+        return this._id
     }
 
-    get token(){
-        return this._token;
+    get secretKey(){
+        return this._secretKey
     }
 }
 
-module.exports = FindSecretCommand;
+module.exports = FindSecretCommand

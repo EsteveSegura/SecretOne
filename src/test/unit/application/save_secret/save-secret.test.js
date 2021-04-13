@@ -1,7 +1,6 @@
 const Secret = require('../../../../domain/secret/secret');
 const SaveSecret = require('../../../../application/save_secret/');
-const SaveSecretCommand = require('../../../../application/save_secret/save-secret-command');
-const SaveSecretResponse = require('../../../../application/save_secret/save-secret-response');
+const SecretResponse = require('../../../../application/save_secret/save-secret-response');
 
 describe('Save Token', () => {
     const secretRepositoryMock = { save: jest.fn(), findById: jest.fn() }
@@ -22,41 +21,43 @@ describe('Save Token', () => {
         jest.clearAllMocks();
     });
 
-    test('should save secret', async () => {
-        tokenGeneratorMock.generate.mockReturnValue('123123')
-        idGeneratorMock.generate.mockReturnValue('123123')
-        
-        const token = tokenGeneratorMock.generate()
-        const id = idGeneratorMock.generate()
+    test('should save throw error when saving secret fails', async () => {
+        const command = { text: 'Holiwis' };
+        const secret = new Secret({
+            id: 'yyyy',
+            secret: 'secret',
+            token: 'token',
+            secretKey: 'secretKey',
+            iv: 'iv',
+            createdAt: new Date(),
+            updatedAt: new Date()
+        })
+        secretRepositoryMock.findById.mockReturnValue(secret);
+        secretRepositoryMock.save.mockRejectedValue(new Error('Error'));
 
-        secretRepositoryMock.save.mockReturnValue({id,token})
+        await expect(secretRepositoryMock.save(command)).rejects.toThrowError('Error');
 
-        let secretMock = new Secret(
-            { id, secret: 'secret', token, secretKey: '123123123', iv: '234234', createdAt: new Date(), updatedAt: new Date() }
-        );
-
-        const mockSaveData = await secretRepositoryMock.save(secretMock)
-        await secretRepositoryMock.findById(id)
-
-        cipherMock.encrypt(secretMock.secret)
-        cipherMock.encrypt.mockReturnValue({ iv: '', secretKey: '', content: '' })
-
-
-        expect(secretRepositoryMock.findById).toHaveBeenCalledTimes(1)
-        expect(secretRepositoryMock.findById).toHaveBeenCalledWith(id)
-        expect(cipherMock.encrypt).toHaveBeenCalledTimes(1)
-
-        expect(secretRepositoryMock.save).toHaveBeenCalledWith(secretMock)
         expect(secretRepositoryMock.save).toHaveBeenCalledTimes(1)
+        expect(secretRepositoryMock.save).toHaveBeenCalledWith(command)
 
-        expect(idGeneratorMock.generate).toHaveBeenCalledWith()
-        expect(idGeneratorMock.generate).toHaveBeenCalledTimes(1)
-
-        expect(tokenGeneratorMock.generate).toHaveBeenCalledWith()
-        expect(tokenGeneratorMock.generate).toHaveBeenCalledTimes(1)
-
-        expect(mockSaveData).toEqual({token,id})
     });
 
-    
+    test('should save secret', async () => {
+        const command = { text: 'Holiwis' };
+
+        cipherMock.encrypt.mockReturnValue({ iv: 'iv', secretKey: 'secretKey', content: 'secret' })
+        idGeneratorMock.generate.mockReturnValue('1111')
+        tokenGeneratorMock.generate.mockReturnValue('1111')
+        secretRepositoryMock.findById.mockReturnValue(null);
+        secretRepositoryMock.save.mockReturnValue(Promise.resolve())
+
+        const resultSave = await saveSecretMock.save(command)
+     
+        expect(resultSave).toEqual(new SecretResponse({token:'1111',id:'1111'}))
+
+        expect(secretRepositoryMock.findById).toHaveBeenCalledTimes(1)
+        expect(secretRepositoryMock.findById).toHaveBeenCalledWith('1111')
+
+        expect(secretRepositoryMock.save).toHaveBeenCalledTimes(1)       
+    });
 })
