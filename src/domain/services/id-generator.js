@@ -1,7 +1,7 @@
 const idGenerator = ({uuidv4}) => {
-    return{
+    return {
         generate: () => uuidv4(),
-    };
-};
+    }
+}
 
-module.exports = idGenerator;
+module.exports = idGenerator

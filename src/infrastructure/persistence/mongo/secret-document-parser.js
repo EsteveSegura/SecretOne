@@ -1,47 +1,42 @@
 const Secret = require('../../../domain/secret/secret');
 
-const mongoSecretParser = ({ muuid }) => {
+const mongoSecretParser = ({ mmuid }) => {
     return {
         toDomain: ({
             _id,
             secret,
             token,
-            secretKey,
             iv,
             createdAt,
             updatedAt }) => {
-            const id = (muuid.from(_id)).toString();
+            const id = (mmuid.from(_id)).toString();
             return new Secret({
                 id,
                 token,
                 secret,
-                secretKey,
                 iv,
                 createdAt,
-                updatedAt,
+                updatedAt
             })
         },
         toDocument: ({
             id,
             token,
             secret,
-            secretKey,
             iv,
             createdAt,
-            updatedAt,
-        }) => {
-            const _id = muuid.from(id);
+            updatedAt }) => {
+            const _id = mmuid.from(id);
             return {
                 _id,
                 token,
                 secret,
-                secretKey,
                 iv,
                 createdAt,
                 updatedAt
             };
-        },
-    };
-};
+        }
+    }
+}
 
-module.exports = mongoSecretParser;
+module.exports = mongoSecretParser
