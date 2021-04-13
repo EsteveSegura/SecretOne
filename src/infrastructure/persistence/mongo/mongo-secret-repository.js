@@ -1,34 +1,28 @@
 const MUUID = require('uuid-mongodb');
 const SecretRepository = require('../../../domain/secret/service/secret-repository');
 
-
-class MongoSecretRepository extends SecretRepository {
-    constructor({ mongoDbHandler, secretDocumentParser }) {
+class MongoSecretRepository extends SecretRepository{
+    constructor({mongoDbHandler, secretDocumentParser}){
         super();
         this.mongoDbHandler = mongoDbHandler;
-        this.secretDocumentParser = secretDocumentParser;
+        this.secretDocumentParser = secretDocumentParser
     }
 
-    async findById(id) {
+    async findById(id){
         const db = await this.mongoDbHandler.getInstance();
         try {
-            const secretDocument = await db.collection('secrets').findOne({ _id: MUUID.from(id) });
+            const secretDocument = await db.collection('secrets').findOne({_id: MUUID.from(id)})
             return secretDocument ? this.secretDocumentParser.toDomain(secretDocument) : null;
         } catch (error) {
-            throw new Error(error);
+            throw new Error(error)
         }
     }
 
-    async findByToken(token) {
-        throw new Error('Method not implemented yet');
+    async findByToken(token){
+        throw new Error('Not implemented');
     }
 
-    async update(secret) {
-        throw new Error('Method not implemented yet');
-
-    }
-
-    async save(secret) {
+    async save(secret){
         const db = await this.mongoDbHandler.getInstance();
         try {
             const secretDocument = this.secretDocumentParser.toDocument(secret);
@@ -36,21 +30,22 @@ class MongoSecretRepository extends SecretRepository {
 
             return Promise.resolve();
         } catch (error) {
-            console.error(error)
             throw new Error(error)
         }
     }
-
-    async delete(id) {
-        const db = await this.mongoDbHandler.getInstance();
-        try {
-            await db.collection('secrets').deleteOne({ _id: MUUID.from(id) });
-        } catch (error) {
-            throw new Error(error);
-        }
+    
+    async update(secret){
+        throw new Error('Not implemented');
     }
 
-
+    async delete(id){
+        const db = await this.mongoDbHandler.getInstance();        
+        try {
+            await db.collection('secrets').deleteOne({_id: MUUID.from(id)})
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
 }
 
 module.exports = MongoSecretRepository;

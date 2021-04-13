@@ -5,12 +5,12 @@ class DeleteSecretCommand{
     }
 
     get id(){
-        return this._id;
+        return this._id
     }
 
     get token(){
-        return this._token;
+        return this._token
     }
 }
 
-module.exports = DeleteSecretCommand;
+module.exports = DeleteSecretCommand

@@ -1,13 +1,13 @@
-const mongoTimeout = process.env.MONGO_TIMEOUT || 5000;
-let mongoConnectionUri = process.env.MONGO_URI || 'mongodb://localhost:27017/';
+const mongoTimeout = 5000;
+let mongoConnectionUri = 'mongodb://localhost:27017/';
 
 const run = {
     server: {
-        port: 3000
+        port: 3001
     },
-    mongo: {
+    mongo:{
         mongoConnectionUri,
-        dbName: process.env.MONGO_DB_NAME || 'secret',
+        dbName: 'secret',
         timeout: mongoTimeout
     }
 }

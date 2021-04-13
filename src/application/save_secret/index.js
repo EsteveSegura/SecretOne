@@ -11,32 +11,24 @@ class SaveSecret {
 
     async save({ text }) {
         const { id, token } = this._generateIdAndToken()
-        
-        const findSecret = await this.secretRepository.findById(id);
-        this._ensureSecretExists(findSecret);
+        const currentDate = new Date()
+
+        const getSecret = await this.secretRepository.findById(id);
+        this._secretExists(getSecret);
 
         const { iv, secretKey, secret } = this._encryptText(text)
-        const currentDate = new Date();
-
         const secretDomain = new Secret({
             id,
             secret,
             token,
-            secretKey,
             iv,
             createdAt: currentDate,
             updatedAt: currentDate
         });
 
-        await this.secretRepository.save(secretDomain);
-        return new SaveSecretResponse({ token, id })
-    }
+        await this.secretRepository.save(secretDomain)
 
-    _encryptText(text) {
-        const secretEncrypted = this.cipher.encrypt(text)
-        const { iv, secretKey, content: secret } = secretEncrypted;
-
-        return { iv, secretKey, secret }
+        return new SaveSecretResponse({ id, secretKey })
     }
 
     _generateIdAndToken() {
@@ -46,12 +38,20 @@ class SaveSecret {
         return { id, token }
     }
 
-    _ensureSecretExists(secret) {
+    _encryptText(text) {
+        const secretEncrypted = this.cipher.encrypt(text);
+        console.log(secretEncrypted)
+        const { iv, secretKey, content: secret } = secretEncrypted;
+        
+
+        return { iv, secretKey, secret }
+    }
+
+    _secretExists(secret) {
         if (secret) {
-            throw new Error('Secret already exist');
+            throw new Error('Secret already exists');
         }
     }
 }
 
-
-module.exports = SaveSecret;
+module.exports = SaveSecret
