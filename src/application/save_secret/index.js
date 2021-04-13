@@ -28,7 +28,7 @@ class SaveSecret {
 
         await this.secretRepository.save(secretDomain)
 
-        return new SaveSecretResponse({ id, secretKey })
+        return new SaveSecretResponse({ id, secretKey, token })
     }
 
     _generateIdAndToken() {

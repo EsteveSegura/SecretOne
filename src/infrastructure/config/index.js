@@ -3,7 +3,7 @@ let mongoConnectionUri = 'mongodb://localhost:27017/';
 
 const run = {
     server: {
-        port: 3001
+        port: 3000
     },
     mongo:{
         mongoConnectionUri,
