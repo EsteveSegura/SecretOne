@@ -30,10 +30,20 @@ router.get('/:id/:secretKey', async (req,res) => {
         const findSecret =  container.resolve('findSecret');
         const response = await findSecret.find(command);
 
+<<<<<<< HEAD
         res.status(200).json({...response})
     } catch (error) {
         console.log(error)
         res.status(500).json({error: error.toString()})        
+=======
+        const deleteSecret = container.resolve('deleteSecret');
+        await deleteSecret.delete({ id, token });
+
+        res.status(200).json({ ...response });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ error: err.toString() });
+>>>>>>> fd546c84f0b1be87039691d6f37d0be2177a897b
     }
 })
 

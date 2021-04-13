@@ -1,5 +1,6 @@
 const FindSecretResponse = require('./find-secret-response');
 
+<<<<<<< HEAD
 class FindSecret {
     constructor({ secretRepository, cipher }) {
         this.secretRepository = secretRepository;
@@ -9,6 +10,20 @@ class FindSecret {
     async find({ id, secretKey }) {
         const findSecret = await this.secretRepository.findById(id)
 
+=======
+class SaveSecret {
+    constructor({ secretRepository, cipher, RedisSecretCache }) {
+        this.secretRepository = secretRepository;
+        this.cipher = cipher;
+        this.RedisSecretCache = RedisSecretCache;
+    }
+
+    async find({ id, token }) {
+        const findSecret = await this.secretRepository.findById(id);
+        const findSecretCache = await this.RedisSecretCache.findById(id);
+        console.log(findSecretCache)
+        
+>>>>>>> fd546c84f0b1be87039691d6f37d0be2177a897b
         this._ensureSecretExists(findSecret);
         findSecret.ensureIdIsValid(id)
         

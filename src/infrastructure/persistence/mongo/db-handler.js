@@ -21,8 +21,8 @@ const MongoDbHandler = (() => {
   const createInstance = async () => {
     const db = await _connect();
 
-    db.collection('streameruser').createIndexes([
-      { name: 'textInDescription', key: { textInDescription: 1 } },
+    db.collection('secrets').createIndexes([
+      { name: 'token', key: { token: 1 } },
       { name: 'id', key: { id: 1 } },
     ], function (err, result) {
       console.log(result);
