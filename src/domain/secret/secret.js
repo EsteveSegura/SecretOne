@@ -1,11 +1,11 @@
-const { RichPresenceAssets } = require("discord.js");
 
 class Secret {
-    constructor({ id, secret, token,  iv, createdAt, updatedAt }) {
+    constructor({ id, secret, token,  iv, expireAt, createdAt, updatedAt }) {
         this.id = id;
         this.secret = secret;
         this.token = token;
         this.iv = iv;
+        this.expireAt = expireAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -68,6 +68,18 @@ class Secret {
         }
 
         this._iv = iv;
+    }
+
+    get expireAt() {
+        return this._expireAt;
+    }
+
+    set expireAt(expireAt) {
+        if (!expireAt) {
+            throw new Error('Field expireAt in Secret cannot be empty')
+        }
+
+        this._expireAt = expireAt;
     }
 
     get createdAt() {

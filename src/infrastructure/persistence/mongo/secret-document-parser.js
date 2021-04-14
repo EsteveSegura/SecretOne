@@ -7,6 +7,7 @@ const mongoSecretParser = ({ mmuid }) => {
             secret,
             token,
             iv,
+            expireAt,
             createdAt,
             updatedAt }) => {
             const id = (mmuid.from(_id)).toString();
@@ -15,6 +16,7 @@ const mongoSecretParser = ({ mmuid }) => {
                 token,
                 secret,
                 iv,
+                expireAt,
                 createdAt,
                 updatedAt
             })
@@ -24,6 +26,7 @@ const mongoSecretParser = ({ mmuid }) => {
             token,
             secret,
             iv,
+            expireAt,
             createdAt,
             updatedAt }) => {
             const _id = mmuid.from(id);
@@ -32,6 +35,7 @@ const mongoSecretParser = ({ mmuid }) => {
                 token,
                 secret,
                 iv,
+                expireAt,
                 createdAt,
                 updatedAt
             };
