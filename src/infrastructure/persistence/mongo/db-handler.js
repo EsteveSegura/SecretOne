@@ -24,16 +24,13 @@ const MongoDbHandler = (() => {
         const db = await _connect();
         
         await db.collection('secrets').createIndex( { "expireAt": 1 }, { expireAfterSeconds: 1 } )
-        const collections = await db.collection('secrets').createIndexes([
+        await db.collection('secrets').createIndexes([
             { name: 'token', key: { token: 1 } },
-            { name: '_id', key: { _id: 1 } },
-            /*{ name: 'expireAt', key: { expireAt: 1 } }*/],
-            //{ "expireAt": 1 }, { expireAfterSeconds: 0 },
+            { name: '_id', key: { _id: 1 } }],
             function (err, result) {
             console.log(result);
         });
 
-        console.log(collections)
 
         return db;
     };

@@ -9,9 +9,9 @@ const isTokenPresent = require('./middleware/token-is-present');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    const { secret: text } = req.body
+    const { secret: text, expireAt } = req.body
     try {
-        const command = new SaveSecretCommand({ text })
+        const command = new SaveSecretCommand({ text, expireAt })
         const saveSecret = container.resolve('saveSecret');
         const response = await saveSecret.save(command)
 

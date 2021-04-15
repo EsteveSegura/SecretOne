@@ -9,20 +9,14 @@ class SaveSecret {
         this.cipher = cipher;
     }
 
-    async save({ text }) {
+    async save({ text, expireAt }) {
         const { id, token } = this._generateIdAndToken()
         
         const getSecret = await this.secretRepository.findById(id);
         this._secretExists(getSecret);
-        
-        
-        /*const date = new Date()
-        const currentDate = new Date(date.getTime() + 120 * 60000)
-        const newDate = new Date(date.getTime() + 121 * 60000)*/
 
         const date = new Date()
-        const currentDate = date
-        const newDate = new Date(date.getTime() + 5 * 60000)
+        const newDate = new Date(date.getTime() + expireAt * 60000)
 
         const { iv, secretKey, secret } = this._encryptText(text)
         const secretDomain = new Secret({
@@ -31,8 +25,8 @@ class SaveSecret {
             token,
             iv,
             expireAt: newDate,
-            createdAt: currentDate,
-            updatedAt: currentDate
+            createdAt: date,
+            updatedAt: date
         });
 
         await this.secretRepository.save(secretDomain)
