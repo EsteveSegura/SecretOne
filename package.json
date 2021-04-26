@@ -1,0 +1,24 @@
+{
+  "name": "SecretOne",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./src/index.js",
+    "test": "jest --testPathPattern=/src/test/unit --maxWorkers=1 --forceExit --passWithNoTests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "awilix": "^4.3.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jest": "^26.6.3",
+    "mongodb": "^3.6.6",
+    "uuid": "^8.3.2",
+    "uuid-mongodb": "^2.4.2"
+  }
+}
