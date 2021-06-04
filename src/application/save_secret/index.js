@@ -43,9 +43,7 @@ class SaveSecret {
 
     _encryptText(text) {
         const secretEncrypted = this.cipher.encrypt(text);
-        console.log(secretEncrypted)
         const { iv, secretKey, content: secret } = secretEncrypted;
-        
 
         return { iv, secretKey, secret }
     }

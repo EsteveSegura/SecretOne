@@ -16,5 +16,8 @@ app.use('/api/v1/secret',secretRoutes);
 
 const server = app.listen(port, () => console.log(`App running on http://localhost:${port}`));
 
+const slackBot = require('../src/infrastructure/slack/Bot');
+
+
 module.exports = { app, server}
 
