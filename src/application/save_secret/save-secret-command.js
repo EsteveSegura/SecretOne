@@ -9,7 +9,7 @@ class SaveSecretCommand{
     }
 
     get text(){
-        return this._text;
+        return this._text
     }
 }
 
